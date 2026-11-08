@@ -10,26 +10,28 @@
         input { width: 60%; }
         button { background-color: #ff4500; color: white; cursor: pointer; }
         button:hover { background-color: #ff5722; }
-        #resultado { margin-top: 20px; white-space: pre-wrap; text-align: left; background: #2a2a2a; padding: 20px; border-radius: 5px; display: inline-block; width: 60%; }
+        #resultado { margin-top: 20px; white-space: pre-wrap; text-align: left; background: #2a2a2a; padding: 20px; border-radius: 5px; }
     </style>
 </head>
 <body>
+
     <h1>CHARLY IA CLIP</h1>
     <p>Herramienta para generar clips a partir de videos o enlaces.</p>
-    
+
     <div>
         <input type="text" id="videoUrl" placeholder="Pega aquí el enlace de YouTube...">
         <br>
         <button onclick="procesarVideo()">Generar Clip</button>
     </div>
 
-    <div id="resultado">Aquí aparecerá el resultado de la IA...</div>
+    <div id="resultado">Aquí aparecerá el resultado de la IA.</div>
 
     <script>
+        const apiKey = "AIzaSyBTD_An4ccLNQ932ybcj17G3nc1818sNoE";
         async function procesarVideo() {
             const url = document.getElementById('videoUrl').value;
             const resultadoDiv = document.getElementById('resultado');
-            
+
             if (!url) {
                 alert("Por favor ingresa un enlace.");
                 return;
@@ -37,8 +39,6 @@
 
             resultadoDiv.innerText = "Procesando con la IA, por favor espera...";
 
-            // Reemplaza 'TU_API_KEY' con tu clave real de Google AI Studio
-            const apiKey = "AIzaSyBTD_An4ccLNQ932ybCj17G3ncl818sNoE"; 
             const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
 
             try {
@@ -47,14 +47,17 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         contents: [{
-                            parts: [{ text: `Analiza este enlace de video y genera un resumen o estructura para un clip corto: ${url}` }]
+                            parts: [{ text: "Analiza este enlace de video y genera un resumen o estructura para un clip corto: " + url }]
                         }]
                     })
                 });
 
                 const data = await response.json();
-                const textoGenerado = data.candidates[0].content.parts[0].text;
-                resultadoDiv.innerText = textoGenerado;
+                if (data.candidates && data.candidates[0].content.parts[0].text) {
+                    resultadoDiv.innerText = data.candidates[0].content.parts[0].text;
+                } else {
+                    resultadoDiv.innerText = "No se pudo generar el resumen.";
+                }
             } catch (error) {
                 resultadoDiv.innerText = "Hubo un error al procesar la solicitud: " + error.message;
             }

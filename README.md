@@ -1,2 +1,2 @@
-# charly_ia_clips
-motor de inteligencia artificial para crear clips automáticamente.
+CHARLY IA CLIP. 
+herramienta para generar clips a partir de videos o enlaces.

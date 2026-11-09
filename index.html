@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Charly IA Clips</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            background-color: #1a1a1a; 
+            color: #fff; 
+            text-align: center; 
+            padding: 40px; 
+            margin: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #2a2a2a;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
+        input { 
+            width: 80%; 
+            padding: 12px; 
+            font-size: 16px; 
+            margin-bottom: 15px; 
+            border-radius: 5px; 
+            border: 1px solid #444; 
+            background: #111; 
+            color: #fff;
+        }
+        button { 
+            padding: 12px 20px; 
+            font-size: 16px; 
+            border-radius: 5px; 
+            border: none; 
+            background-color: #ff4500; 
+            color: white; 
+            cursor: pointer; 
+            font-weight: bold;
+        }
+        button:hover { background-color: #ff5722; }
+        #resultado { 
+            margin-top: 25px; 
+            white-space: pre-wrap; 
+            text-align: left; 
+            background: #111; 
+            padding: 15px; 
+            border-radius: 5px; 
+            border: 1px solid #444;
+            min-height: 50px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>CHARLY IA CLIPS</h1>
+        <p>Herramienta para generar clips a partir de enlaces de YouTube.</p>
+
+        <div>
+            <input type="text" id="videoUrl" placeholder="Pega aquí el enlace de YouTube...">
+            <br>
+            <button onclick="procesarVideo()">Generar Clip</button>
+        </div>
+
+        <div id="resultado">Aquí aparecerá el resultado de la IA.</div>
+    </div>
+
+    <script>
+        const apiKey = "AQ.Ab8RN6IjD-Wdp3QyPIgctgoAgfsXHfWQOZ4d9_0CUMaPrVuS-g";
+        
+        async function procesarVideo() {
+            const url = document.getElementById('videoUrl').value;
+            const resultadoDiv = document.getElementById('resultado');
+
+            if (!url) {
+                alert("Por favor ingresa un enlace.");
+                return;
+            }
+
+            resultadoDiv.innerText = "Procesando con la IA, por favor espera...";
+
+            const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+
+            try {
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{
+                            parts: [{ text: "Analiza este enlace de video y genera un resumen o estructura para un clip corto: " + url }]
+                        }]
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (data.error) {
+                    resultadoDiv.innerText = "Error de la API: " + data.error.message;
+                } else if (data.candidates && data.candidates[0].content && data.candidates[0].content.parts) {
+                    resultadoDiv.innerText = data.candidates[0].content.parts[0].text;
+                } else {
+                    resultadoDiv.innerText = "No se pudo obtener una respuesta válida.";
+                }
+            } catch (error) {
+                resultadoDiv.innerText = "Error de conexión: " + error.message;
+            }
+        }
+    </script>
+</body>
+</html>

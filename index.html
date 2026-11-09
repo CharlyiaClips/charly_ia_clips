@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -93,7 +94,7 @@
                         'Authorization': `Bearer ${groqApiKey}`
                     },
                     body: JSON.stringify({
-                        model: "openai/gpt-oss-20b",
+                        model: "llama-3.1-8b-instant",
                         messages: [{
                             role: "user",
                             content: "Analiza este enlace de video de YouTube y genera un resumen o estructura para un clip corto: " + url

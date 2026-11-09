@@ -70,7 +70,7 @@
     </div>
 
     <script>
-        const apiKey = "AQ.Ab8RN6IjD-Wdp3QyPIgctgoAgfsXHfWQOZ4d9_0CUMaPrVuS-g";
+        const groqApiKey = "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";
         
         async function procesarVideo() {
             const url = document.getElementById('videoUrl').value;
@@ -81,18 +81,22 @@
                 return;
             }
 
-            resultadoDiv.innerText = "Procesando con la IA, por favor espera...";
+            resultadoDiv.innerText = "Procesando con la IA de Groq, por favor espera...";
 
-            // Actualizado al modelo estándar actual de Gemini
-            const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+            const endpoint = "https://api.groq.com/openai/v1/chat/completions";
 
             try {
                 const response = await fetch(endpoint, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${groqApiKey}`
+                    },
                     body: JSON.stringify({
-                        contents: [{
-                            parts: [{ text: "Analiza este enlace de video y genera un resumen o estructura para un clip corto: " + url }]
+                        model: "llama-3.3-70b-versatile",
+                        messages: [{
+                            role: "user",
+                            content: "Analiza este enlace de video de YouTube y genera un resumen o estructura para un clip corto: " + url
                         }]
                     })
                 });
@@ -101,8 +105,8 @@
                 
                 if (data.error) {
                     resultadoDiv.innerText = "Error de la API: " + data.error.message;
-                } else if (data.candidates && data.candidates[0].content && data.candidates[0].content.parts) {
-                    resultadoDiv.innerText = data.candidates[0].content.parts[0].text;
+                } else if (data.choices && data.choices[0].message) {
+                    resultadoDiv.innerText = data.choices[0].message.content;
                 } else {
                     resultadoDiv.innerText = "No se pudo obtener una respuesta válida.";
                 }

@@ -81,7 +81,7 @@
                 return;
             }
 
-            resultadoDiv.innerText = "Procesando con la IA de Groq, por favor espera...";
+            resultadoDiv.innerText = "Procesando con la IA, por favor espera...";
 
             const endpoint = "https://api.groq.com/openai/v1/chat/completions";
 
@@ -93,7 +93,7 @@
                         'Authorization': `Bearer ${groqApiKey}`
                     },
                     body: JSON.stringify({
-                        model: "llama-3.1-8b-instant",
+                        model: "gpt-oss-20b",
                         messages: [{
                             role: "user",
                             content: "Analiza este enlace de video de YouTube y genera un resumen o estructura para un clip corto: " + url

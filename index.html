@@ -103,15 +103,15 @@
 
                 const data = await response.json();
                 
-                if (data.error) {
-                    resultadoDiv.innerText = "Error de la API: " + data.error.message;
+                if (!response.ok) {
+                    resultadoDiv.innerText = "Error HTTP (" + response.status + "): " + (data.error ? data.error.message : JSON.stringify(data));
                 } else if (data.choices && data.choices[0].message) {
                     resultadoDiv.innerText = data.choices[0].message.content;
                 } else {
-                    resultadoDiv.innerText = "No se pudo obtener una respuesta válida.";
+                    resultadoDiv.innerText = "Respuesta inesperada: " + JSON.stringify(data);
                 }
             } catch (error) {
-                resultadoDiv.innerText = "Error de conexión: " + error.message;
+                resultadoDiv.innerText = "Error de conexión o red: " + error.message;
             }
         }
     </script>

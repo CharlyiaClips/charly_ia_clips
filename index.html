@@ -83,7 +83,8 @@
 
             resultadoDiv.innerText = "Procesando con la IA, por favor espera...";
 
-            const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+            // Actualizado al modelo estándar actual de Gemini
+            const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
 
             try {
                 const response = await fetch(endpoint, {
